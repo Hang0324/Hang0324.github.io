@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>3D 作品 · Hang</title>
+  <style>
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#050607;color:#fff;font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif}
+    .loading{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;background:#050607;transition:opacity .5s ease}.loading span{font-size:14px;letter-spacing:.12em;color:#b2bac2}.loading span::after{content:"";display:block;width:120px;height:1px;margin-top:14px;background:linear-gradient(90deg,#c8ff45 50%,#30363d 50%);background-size:200% 100%;animation:load 1.4s linear infinite}.interaction-lock{position:fixed;inset:0;z-index:20;cursor:default;touch-action:none;user-select:none}.ready .loading{opacity:0}@keyframes load{to{background-position:-200% 0}}@media(prefers-reduced-motion:reduce){.loading span::after{animation:none}}
+  </style>
+  <script src="https://viewer.marmoset.co/main/marmoset.js"></script>
+</head>
+<body>
+  <div class="loading"><span>正在加载 3D 作品</span></div><div class="interaction-lock" aria-hidden="true"></div>
+  <script>
+    const work=new URLSearchParams(location.search).get('work');
+    if(!/^\d{2}$/.test(work||'')){document.querySelector('.loading span').textContent='作品地址无效'}else{
+      const folder=`Mview/Work${work}/`;
+      fetch(folder+'title.txt').then(response=>response.ok?response.text():'3D 作品').then(title=>{document.title=title.trim()+' · Hang';document.querySelector('.loading span').textContent='正在加载 '+title.trim()});
+      try{marmoset.embed(folder+'model.mview',{width:innerWidth,height:innerHeight,autoStart:true,fullFrame:true,pagePreset:false,thumbnailURL:folder+'cover.jpg'});setTimeout(()=>document.body.classList.add('ready'),1800)}catch{document.querySelector('.loading span').textContent='3D 查看器加载失败，请检查网络后重试'}
+    }
+  </script>
+</body>
+</html>
