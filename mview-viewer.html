@@ -13,11 +13,11 @@
 <body>
   <div class="loading"><span>正在加载 3D 作品</span></div><div class="interaction-lock" aria-hidden="true"></div>
   <script>
-    const work=new URLSearchParams(location.search).get('work');
+    const parameters=new URLSearchParams(location.search),work=parameters.get('work'),version=parameters.get('v')||'1';
     if(!/^\d{2}$/.test(work||'')){document.querySelector('.loading span').textContent='作品地址无效'}else{
       const folder=`Mview/Work${work}/`;
-      fetch(folder+'title.txt').then(response=>response.ok?response.text():'3D 作品').then(title=>{document.title=title.trim()+' · Hang';document.querySelector('.loading span').textContent='正在加载 '+title.trim()});
-      try{marmoset.embed(folder+'model.mview',{width:innerWidth,height:innerHeight,autoStart:true,fullFrame:true,pagePreset:false,thumbnailURL:folder+'cover.jpg'});setTimeout(()=>document.body.classList.add('ready'),1800)}catch{document.querySelector('.loading span').textContent='3D 查看器加载失败，请检查网络后重试'}
+      fetch(`${folder}title.txt?v=${version}`,{cache:'no-store'}).then(response=>response.ok?response.text():'3D 作品').then(title=>{document.title=title.trim()+' · Hang';document.querySelector('.loading span').textContent='正在加载 '+title.trim()});
+      try{marmoset.noUserInterface=true;marmoset.embed(`${folder}model.mview?v=${version}`,{width:innerWidth,height:innerHeight,autoStart:true,fullFrame:true,pagePreset:false,thumbnailURL:`${folder}cover.jpg?v=${version}`});setTimeout(()=>document.body.classList.add('ready'),1800)}catch{document.querySelector('.loading span').textContent='3D 查看器加载失败，请检查网络后重试'}
     }
   </script>
 </body>
